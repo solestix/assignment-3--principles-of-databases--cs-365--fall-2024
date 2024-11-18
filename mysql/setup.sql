@@ -9,7 +9,7 @@ FLUSH PRIVILEGES;
 
 SET block_encryption_mode = 'aes-256-cbc';
 SET @key_str = UNHEX(SHA2('nothing to see here', 256));
-SET @init_vector = UNHEX('1234567890ABCDEF');
+SET @init_vector = '1234567890ABCDEF';
 
 CREATE TABLE IF NOT EXISTS user (
   user_id      SMALLINT(5)  NOT NULL AUTO_INCREMENT,

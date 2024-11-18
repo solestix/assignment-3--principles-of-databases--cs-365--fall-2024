@@ -7,7 +7,7 @@ function search($search) {
             "mysql:host=" . DBHOST . "; dbname=" . DBNAME . ";charset=utf8",
             DBUSER
         );
-
+        $db->exec("SET block_encryption_mode = 'aes-256-cbc';");
         $select_query = "
             SELECT 'user' AS table_name, user_id AS id, first_name AS attribute1, last_name AS attribute2, email AS attribute3, NULL AS attribute4, NULL AS attribute5
             FROM user
@@ -18,7 +18,7 @@ function search($search) {
             WHERE site_name LIKE :search OR domain LIKE :search
             UNION
             SELECT 'password' AS table_name, user_id AS id, site_id AS attribute1, username AS attribute2,
-                   AES_DECRYPT(password.password, UNHEX(SHA2('" . KEY_STR . "', 256)), UNHEX('" . IV_STR . "')) AS attribute3, time_created AS attribute4, comment AS attribute5
+                   AES_DECRYPT(password, UNHEX(SHA2('nothing to see here', 256)), '1234567890ABCDEF') AS attribute3, time_created AS attribute4, comment AS attribute5
             FROM password
             WHERE username LIKE :search OR comment LIKE :search
         ";
@@ -63,6 +63,7 @@ function search($search) {
 }
 
 function update($table, $current_attribute, $new_attribute, $query_attribute, $pattern) {
+    $db->exec("SET block_encryption_mode = 'aes-256-cbc';");
     try {
         $db = new PDO(
             "mysql:host=" . DBHOST . "; dbname=" . DBNAME . ";charset=utf8",
@@ -84,7 +85,7 @@ function insert($table, $data) {
             "mysql:host=" . DBHOST . "; dbname=" . DBNAME . ";charset=utf8",
             DBUSER,
         );
-
+        $db->exec("SET block_encryption_mode = 'aes-256-cbc';");
         // Manually handle primary keys
         if ($table == 'user') {
             if (!isset($data['user_id'])) {
@@ -100,6 +101,14 @@ function insert($table, $data) {
             }
             // Automatically set the time_created field to NOW()
             $data['time_created'] = date('Y-m-d H:i:s');
+
+            // Encrypt the password
+            $statement = $db -> prepare("SELECT AES_ENCRYPT(:password, UNHEX(SHA2('nothing to see here', 256)), '1234567890ABCDEF') AS encrypted_password");
+            $statement -> execute([
+                ':password' => $data['password'],
+            ]);
+            $result = $statement -> fetch(PDO::FETCH_ASSOC);
+            $data['password'] = $result['encrypted_password'];
         }
 
         $columns = array_keys($data);

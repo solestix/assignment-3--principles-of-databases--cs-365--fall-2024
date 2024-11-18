@@ -40,10 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Database Management</title>
+    <title>Password Management</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1>Database Management</h1>
+    <h1>Password Management</h1>
 
     <h2>Search</h2>
     <form method="post">
