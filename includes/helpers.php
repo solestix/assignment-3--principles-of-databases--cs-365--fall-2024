@@ -63,12 +63,22 @@ function search($search) {
 }
 
 function update($table, $current_attribute, $new_attribute, $query_attribute, $pattern) {
-    $db->exec("SET block_encryption_mode = 'aes-256-cbc';");
     try {
         $db = new PDO(
             "mysql:host=" . DBHOST . "; dbname=" . DBNAME . ";charset=utf8",
             DBUSER
         );
+        $db->exec("SET block_encryption_mode = 'aes-256-cbc';");
+
+        // Encrypt the password if the current attribute is 'password'
+        if ($current_attribute == 'password') {
+            $statement = $db -> prepare("SELECT AES_ENCRYPT(:password, UNHEX(SHA2('nothing to see here', 256)), '1234567890ABCDEF') AS encrypted_password");
+            $statement -> execute([
+                ':password' => $new_attribute
+            ]);
+            $result = $statement -> fetch(PDO::FETCH_ASSOC);
+            $new_attribute = $result['encrypted_password'];
+        }
 
         $db -> query("UPDATE {$table} SET {$current_attribute}=\"{$new_attribute}\" WHERE {$query_attribute}=\"{$pattern}\"");
     } catch( PDOException $e ) {
@@ -105,7 +115,7 @@ function insert($table, $data) {
             // Encrypt the password
             $statement = $db -> prepare("SELECT AES_ENCRYPT(:password, UNHEX(SHA2('nothing to see here', 256)), '1234567890ABCDEF') AS encrypted_password");
             $statement -> execute([
-                ':password' => $data['password'],
+                ':password' => $data['password']
             ]);
             $result = $statement -> fetch(PDO::FETCH_ASSOC);
             $data['password'] = $result['encrypted_password'];

@@ -7,6 +7,9 @@ $tables = [
     'password' => ['user_id', 'site_id', 'username', 'password', 'comment']
 ];
 
+// Merge all attributes into a single array
+$all_attributes = array_unique(array_merge(...array_values($tables)));
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['search'])) {
         $search = $_POST['search'];
@@ -29,9 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         insert($table, $data);
     } elseif (isset($_POST['delete'])) {
         $table = $_POST['table'];
-        $current_attribute = $_POST['current_attribute'];
-        $pattern = $_POST['pattern'];
-        delete($table, $current_attribute, $pattern);
+        $current_attribute = $_POST['current_attribute'] ?? '';
+        $pattern = $_POST['pattern'] ?? '';
+        if ($current_attribute && $pattern) {
+            delete($table, $current_attribute, $pattern);
+        } else {
+            echo '<p id="error">Both current attribute and pattern must be provided for deletion.</p>';
+        }
     }
 }
 ?>
@@ -63,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </select>
         <label for="current_attribute">Current Attribute:</label>
         <select name="current_attribute" id="current_attribute">
-            <?php foreach ($tables['user'] as $attribute): ?>
+            <?php foreach ($all_attributes as $attribute): ?>
                 <option value="<?= $attribute ?>"><?= $attribute ?></option>
             <?php endforeach; ?>
         </select>
@@ -71,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="text" name="new_attribute" placeholder="New Attribute">
         <label for="query_attribute">Query Attribute:</label>
         <select name="query_attribute" id="query_attribute">
-            <?php foreach ($tables['user'] as $attribute): ?>
+            <?php foreach ($all_attributes as $attribute): ?>
                 <option value="<?= $attribute ?>"><?= $attribute ?></option>
             <?php endforeach; ?>
         </select>
@@ -123,12 +130,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </select>
         <label for="current_attribute">Current Attribute:</label>
         <select name="current_attribute" id="current_attribute">
-            <?php foreach ($tables['user'] as $attribute): ?>
+            <?php foreach ($all_attributes as $attribute): ?>
                 <option value="<?= $attribute ?>"><?= $attribute ?></option>
             <?php endforeach; ?>
         </select>
         <input type="text" name="pattern" placeholder="Pattern">
         <button type="submit">Delete</button>
+    </form>
+    <h2>Refresh</h2>
+    <form method="get">
+        <button type="submit">Refresh Page</button>
     </form>
 </body>
 </html>
