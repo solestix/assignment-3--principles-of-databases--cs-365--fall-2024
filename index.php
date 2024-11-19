@@ -4,7 +4,7 @@ include 'includes/helpers.php';
 $tables = [
     'user' => ['user_id', 'first_name', 'last_name', 'email'],
     'website' => ['site_id', 'site_name', 'domain'],
-    'password' => ['user_id', 'site_id', 'username', 'password', 'comment']
+    'login' => ['user_id', 'site_id', 'username', 'password', 'comment']
 ];
 
 // Merge all attributes into a single array
@@ -108,11 +108,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <button type="submit">Insert</button>
     </form>
 
-    <h2>Insert into Password</h2>
+    <h2>Insert into Login</h2>
     <form method="post">
         <input type="hidden" name="insert" value="1">
-        <input type="hidden" name="table" value="password">
-        <?php foreach ($tables['password'] as $attribute): ?>
+        <input type="hidden" name="table" value="login">
+        <?php foreach ($tables['login'] as $attribute): ?>
             <label for="<?= $attribute ?>"><?= ucfirst($attribute) ?>:</label>
             <input type="text" name="<?= $attribute ?>" id="<?= $attribute ?>" placeholder="<?= ucfirst($attribute) ?>">
         <?php endforeach; ?>

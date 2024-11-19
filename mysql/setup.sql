@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS website (
   PRIMARY KEY (site_id)
 );
 
-CREATE TABLE IF NOT EXISTS password (
+CREATE TABLE IF NOT EXISTS login (
   user_id      SMALLINT(5)    NOT NULL,
   site_id      SMALLINT(5)    NOT NULL,
   username     VARCHAR(128)   NOT NULL,
@@ -45,12 +45,12 @@ INSERT INTO website (site_name, domain) VALUES ('X', 'https://twitter.com');
 INSERT INTO website (site_name, domain) VALUES ('Gmail', 'https://mail.google.com/');
 INSERT INTO website (site_name, domain) VALUES ('Amazon', 'https://www.amazon.com/');
 
-INSERT INTO password (user_id, site_id, username, password, time_created, comment) VALUES (1, 1, 'jhard94', AES_ENCRYPT('16buffal0s!', @key_str, @init_vector), NOW(), '');
-INSERT INTO password (user_id, site_id, username, password, time_created, comment) VALUES (1, 2, 'jhard94', AES_ENCRYPT('32buff4los?', @key_str, @init_vector), NOW(), '');
-INSERT INTO password (user_id, site_id, username, password, time_created, comment) VALUES (2, 1, 'mkay_999', AES_ENCRYPT('thatSjusTnoTmkaY12!', @key_str, @init_vector), NOW(), '');
-INSERT INTO password (user_id, site_id, username, password, time_created, comment) VALUES (2, 3, 'mkay', AES_ENCRYPT('thatSjusTnoTmkaY12!', @key_str, @init_vector), NOW(), '');
-INSERT INTO password (user_id, site_id, username, password, time_created, comment) VALUES (3, 2, 'lightyear', AES_ENCRYPT('TireShop44_44', @key_str, @init_vector), NOW(), '');
-INSERT INTO password (user_id, site_id, username, password, time_created, comment) VALUES (3, 3, 'lightyear', AES_ENCRYPT('44_44TireShop', @key_str, @init_vector), NOW(), '');
-INSERT INTO password (user_id, site_id, username, password, time_created, comment) VALUES (4, 1, 'slippinjimmy', AES_ENCRYPT('2B_or!2B', @key_str, @init_vector), NOW(), '');
-INSERT INTO password (user_id, site_id, username, password, time_created, comment) VALUES (4, 2, 'slippinjimmy', AES_ENCRYPT('2B_or!2B', @key_str, @init_vector), NOW(), '');
-INSERT INTO password (user_id, site_id, username, password, time_created, comment) VALUES (4, 3, 'slippinjimmy', AES_ENCRYPT('2B_or!2B', @key_str, @init_vector), NOW(), '');
+INSERT INTO login VALUES (1, 1, 'jhard94', AES_ENCRYPT('16buffal0s!', @key_str, @init_vector), NOW(), '');
+INSERT INTO login VALUES (1, 2, 'jhard94', AES_ENCRYPT('32buff4los?', @key_str, @init_vector), NOW(), '');
+INSERT INTO login VALUES (2, 1, 'mkay_999', AES_ENCRYPT('thatSjusTnoTmkaY12!', @key_str, @init_vector), NOW(), '');
+INSERT INTO login VALUES (2, 3, 'mkay', AES_ENCRYPT('thatSjusTnoTmkaY12!', @key_str, @init_vector), NOW(), '');
+INSERT INTO login VALUES (3, 2, 'lightyear', AES_ENCRYPT('TireShop44_44', @key_str, @init_vector), NOW(), '');
+INSERT INTO login VALUES (3, 3, 'lightyear', AES_ENCRYPT('44_44TireShop', @key_str, @init_vector), NOW(), '');
+INSERT INTO login VALUES (4, 1, 'slippinjimmy', AES_ENCRYPT('2B_or!2B', @key_str, @init_vector), NOW(), '');
+INSERT INTO login VALUES (4, 2, 'slippinjimmy', AES_ENCRYPT('2B_or!2B', @key_str, @init_vector), NOW(), '');
+INSERT INTO login VALUES (4, 3, 'slippinjimmy', AES_ENCRYPT('2B_or!2B', @key_str, @init_vector), NOW(), '');

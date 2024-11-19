@@ -17,9 +17,9 @@ function search($search) {
             FROM website
             WHERE site_name LIKE :search OR domain LIKE :search
             UNION
-            SELECT 'password' AS table_name, user_id AS id, site_id AS attribute1, username AS attribute2,
+            SELECT 'login' AS table_name, user_id AS id, site_id AS attribute1, username AS attribute2,
                    AES_DECRYPT(password, UNHEX(SHA2('nothing to see here', 256)), '1234567890ABCDEF') AS attribute3, time_created AS attribute4, comment AS attribute5
-            FROM password
+            FROM login
             WHERE username LIKE :search OR comment LIKE :search
         ";
         $statement = $db -> prepare($select_query);
@@ -105,9 +105,9 @@ function insert($table, $data) {
             if (!isset($data['site_id'])) {
                 $data['site_id'] = getNextId($db, 'website', 'site_id');
             }
-        } elseif ($table == 'password') {
+        } elseif ($table == 'login') {
             if (!isset($data['user_id']) || !isset($data['site_id'])) {
-                throw new Exception('Primary keys user_id and site_id must be provided for the password table.');
+                throw new Exception('Primary keys user_id and site_id must be provided for the login table.');
             }
             // Automatically set the time_created field to NOW()
             $data['time_created'] = date('Y-m-d H:i:s');
